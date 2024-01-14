@@ -1,0 +1,61 @@
+---
+# tasks file for ssh
+- name: Update APT cache
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+  when: ansible_os_family == "Debian"
+
+- name: Install ssh
+  ansible.builtin.package:
+    name:
+      - openssh-client
+      - openssh-server
+    state: present
+
+- name: Start sshd
+  ansible.builtin.service:
+    name: sshd
+    state: started
+    enabled: true
+
+- name: Disable SSH password authentication
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+    validate: "sshd -t -f %s"
+  with_items:
+    - regexp: "^PasswordAuthentication"
+      line: "PasswordAuthentication no"
+  notify: Restart sshd
+
+- name: Create .ssh folder is present
+  ansible.builtin.file:
+    path: "{{ ssh_dir }}"
+    state: directory
+    mode: "0700"
+
+- name: Create OpenSSH keypair
+  community.crypto.openssh_keypair:
+    path: "{{ ssh_dir }}/id_rsa"
+    regenerate: never
+    type: "{{ ssh_key_type }}"
+  notify: Restart sshd
+
+- name: Create authorized_keys file
+  ansible.builtin.file:
+    path: "{{ ssh_dir }}/authorized_keys"
+    mode: "0600"
+    state: touch
+    access_time: preserve
+    modification_time: preserve
+
+- name: Set authorized ssh keys
+  ansible.builtin.lineinfile:
+    path: "{{ ssh_dir }}/authorized_keys"
+    regexp: "{{ item }}"
+    line: "{{ item }}"
+  with_items: "{{ ssh_authorized_keys }}"
+  notify: Restart sshd

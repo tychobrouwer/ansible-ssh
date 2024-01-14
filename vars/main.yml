@@ -1,0 +1,4 @@
+---
+# vars file for ssh
+ssh_key_type: ed25519
+ssh_dir: $HOME/.ssh
