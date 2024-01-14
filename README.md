@@ -6,11 +6,11 @@ The role installs and configures ssh for my servers.
 Role Variables
 --------------
 
-The ```role_authorized_keys``` array should be used to set the authorized keys.
+The ```ssh_authorized_keys``` array should be used to set the authorized keys.
 
-The ssh key type can be set with the ```role_ssh_key_type``` variable.
+The ssh key type can be set with the ```ssh_key_type``` variable.
 
-The direcotry for the ssh keys can be set using the ```role_ssh_dir``` variable.
+The direcotry for the ssh keys can be set using the ```ssh_dir``` variable.
 
 Example Playbook
 ----------------
