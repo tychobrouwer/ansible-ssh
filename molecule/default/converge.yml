@@ -2,7 +2,7 @@
 - name: Converge
   hosts: all
 
-  roles:      
+  roles:
     - role: ansible-ssh
       ssh_authorized_keys:
         - ssh-rsa XXXXXXXXXXXX client1@user
