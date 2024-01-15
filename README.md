@@ -23,8 +23,8 @@ Example Playbook
           - ssh-rsa XXXXXXXXXXXX client2@user
 
       roles:
-         - { role: ssh_configure }
-         - { role: ssh_configure, ssh_key_type: ed25519, ssh_dir: $HOME/.ssh }
+         - { role: tychobrouwer.ssh }
+         - { role: tychobrouwer.ssh, ssh_key_type: ed25519, ssh_dir: $HOME/.ssh }
 ```
 
 License
