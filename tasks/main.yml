@@ -24,11 +24,16 @@
     path: /etc/ssh/sshd_config
     regexp: "{{ item.regexp }}"
     line: "{{ item.line }}"
+    insertafter: "{{ item.regexp }}"
     state: present
     validate: sshd -t -f %s
   with_items:
     - regexp: ^PasswordAuthentication
       line: PasswordAuthentication no
+      insertafter: \#PasswordAuthentication
+    - regexp: ^Port
+      line: Port {{ ssh_port }}
+      insertafter: \#Port
   notify: Restart sshd
 
 - name: Create .ssh folder is present

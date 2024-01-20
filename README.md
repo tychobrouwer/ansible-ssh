@@ -12,6 +12,8 @@ The ssh key type can be set with the ```ssh_key_type``` variable.
 
 The direcotry for the ssh keys can be set using the ```ssh_dir``` variable.
 
+The ssh port can be set using the ```ssh_port``` variable.
+
 Example Playbook
 ----------------
 
@@ -24,7 +26,7 @@ Example Playbook
 
       roles:
          - { role: tychobrouwer.ssh }
-         - { role: tychobrouwer.ssh, ssh_key_type: ed25519, ssh_dir: $HOME/.ssh }
+         - { role: tychobrouwer.ssh, ssh_key_type: ed25519, ssh_dir: $HOME/.ssh, ssh_port: 22 }
 ```
 
 License

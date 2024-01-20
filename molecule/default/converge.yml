@@ -7,3 +7,4 @@
       ssh_authorized_keys:
         - ssh-rsa XXXXXXXXXXXX client1@user
         - ssh-rsa XXXXXXXXXXXX client2@user
+      ssh_port: 2222
