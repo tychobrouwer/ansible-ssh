@@ -36,7 +36,7 @@
       insertafter: \#Port
   notify: Restart sshd
 
-- name: Create .ssh folder is present
+- name: Create .ssh folder
   ansible.builtin.file:
     path: "{{ ssh_dir }}"
     state: directory
