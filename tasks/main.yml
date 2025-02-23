@@ -49,13 +49,11 @@
     group: "{{ ssh_group }}"
 
 - name: Set authorized ssh keys
-  ansible.builtin.blockinfile:
+  ansible.builtin.lineinfile:
     path: "{{ ssh_dir }}/authorized_keys"
-    block: |
-      {{ item }}
-    marker: "# {mark} ANSIBLE MANAGED BLOCK"
-  loop: "{{ ssh_authorized_keys }}"
-  notify: Restart sshd
+    regexp: "{{ item }}"
+    line: "{{ item }}"
+  with_items: "{{ ssh_authorized_keys }}"
 
 - name: Start sshd
   ansible.builtin.systemd:
