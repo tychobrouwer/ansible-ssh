@@ -13,27 +13,14 @@
       - openssh-server
     state: present
 
-- name: Start sshd
-  ansible.builtin.service:
-    name: ssh
-    state: started
-    enabled: true
-
-- name: Disable SSH password authentication
-  ansible.builtin.lineinfile:
+- name: Disable SSH password authentication and set port
+  ansible.builtin.blockinfile:
     path: /etc/ssh/sshd_config
-    regexp: "{{ item.regexp }}"
-    line: "{{ item.line }}"
-    insertafter: "{{ item.regexp }}"
-    state: present
-    validate: sshd -t -f %s
-  with_items:
-    - regexp: ^PasswordAuthentication
-      line: PasswordAuthentication no
-      insertafter: \#PasswordAuthentication
-    - regexp: ^Port
-      line: Port {{ ssh_port }}
-      insertafter: \#Port
+    block: |
+      PasswordAuthentication no
+      Port {{ ssh_port }}
+    marker: "# {mark} ANSIBLE MANAGED BLOCK"
+    validate: /usr/sbin/sshd -t -f %s
   notify: Restart sshd
 
 - name: Create .ssh folder
@@ -41,8 +28,10 @@
     path: "{{ ssh_dir }}"
     state: directory
     mode: "0700"
+    owner: "{{ ssh_user }}"
+    group: "{{ ssh_group }}"
 
-- name: Create OpenSSH keypair
+- name: Create OpenSSH keypair if it doesn't exist
   community.crypto.openssh_keypair:
     path: "{{ ssh_dir }}/id_rsa"
     regenerate: never
@@ -56,11 +45,20 @@
     state: touch
     access_time: preserve
     modification_time: preserve
+    owner: "{{ ssh_user }}"
+    group: "{{ ssh_group }}"
 
 - name: Set authorized ssh keys
-  ansible.builtin.lineinfile:
+  ansible.builtin.blockinfile:
     path: "{{ ssh_dir }}/authorized_keys"
-    regexp: "{{ item }}"
-    line: "{{ item }}"
-  with_items: "{{ ssh_authorized_keys }}"
+    block: |
+      {{ item }}
+    marker: "# {mark} ANSIBLE MANAGED BLOCK"
+  loop: "{{ ssh_authorized_keys }}"
   notify: Restart sshd
+
+- name: Start sshd
+  ansible.builtin.systemd:
+    name: ssh
+    state: started
+    enabled: true

@@ -1,5 +1,7 @@
 ---
 # vars file for ssh
 ssh_key_type: ed25519
-ssh_dir: $HOME/.ssh
+ssh_user: root
+ssh_group: root
+ssh_dir: /root/.ssh
 ssh_port: 22
