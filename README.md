@@ -18,15 +18,19 @@ Example Playbook
 ----------------
 
 ```yaml
-    - hosts: all
-      vars:
-        ssh_authorized_keys:
-          - ssh-rsa XXXXXXXXXXXX client1@user
-          - ssh-rsa XXXXXXXXXXXX client2@user
+- hosts: all
+  vars:
+    ssh_authorized_keys:
+      - ssh-rsa XXXXXXXXXXXX client1@user
+      - ssh-rsa XXXXXXXXXXXX client2@user
 
-      roles:
-         - { role: tychobrouwer.ssh }
-         - { role: tychobrouwer.ssh, ssh_key_type: ed25519, ssh_dir: $HOME/.ssh, ssh_port: 22 }
+  roles:
+    - role: tychobrouwer.ssh
+    
+    - role: tychobrouwer.ssh
+      ssh_key_type: ed25519
+      ssh_dir: $HOME/.ssh
+      ssh_port: 22
 ```
 
 License
