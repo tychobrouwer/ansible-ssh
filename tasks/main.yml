@@ -46,7 +46,6 @@
     access_time: preserve
     modification_time: preserve
     owner: "{{ ssh_user }}"
-    group: "{{ ssh_group }}"
 
 - name: Set authorized ssh keys
   ansible.builtin.lineinfile:
